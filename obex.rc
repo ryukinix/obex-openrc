@@ -1,0 +1,45 @@
+#!/usr/bin/openrc-run
+# Author: Manoel Vilela © 2019
+
+# DESCRIPTION:
+#
+# OBEX is a file-sharing protocol designed to working with Bluetooth
+# wireless technology. obexd is a necessary daemon to be running for
+# receive/sending over bluetooth works properly on Linux.
+#
+# NOTE: Since obexd has the following properties:
+#
+# 1. It's a user-wise service (run one for your user);
+# 2. need DBUS session to talk to another bluetooth daemons and frontend;
+# 3. Need X11 service running as well.
+#
+# I'd recommend initializing the obexd daemon in the initialization of
+# the windows manager. I solved my main problems with it that way:
+# put in the autorun of my AwesomeWM script.
+# I'm publish this file just for historical reasons. I'm not using this
+# anymore.
+
+
+pidfile="/run/obexd.pid"
+command="/usr/lib/bluetooth/obexd"
+command_user="lerax"
+command_background=1
+
+start_pre() {
+    ## HACK: DISPLAY and DBUS_SESSION_BUS_ADDRESS need to be exported
+    # to this works properly.
+    cd /usr/lib/bluetooth/
+    ebegin "Fetching dbus address..."
+    export HOME="/home/lerax"
+    DBUS_SESSION_FILE=$(ls -d -1 $HOME/.dbus/session-bus/**-0)
+    echo $DBUS_SESSION_FILE
+    cat $DBUS_SESSION_FILE
+    source $DBUS_SESSION_FILE
+    export DISPLAY=:0
+    export DBUS_SESSION_BUS_ADDRESS
+}
+
+depend() {
+    after coldplug
+    need dbus localmount hostname xdm bluetooth
+}
