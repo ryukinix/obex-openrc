@@ -4,8 +4,8 @@
 # DESCRIPTION:
 #
 # OBEX is a file-sharing protocol designed to working with Bluetooth
-# wireless technology. obexd is a necessary daemon to be running for
-# receive/sending over bluetooth works properly on Linux.
+# wireless technology. obexd is a necessary daemon for receive/send
+# feature over bluetooth works properly on Linux.
 #
 # NOTE: Since obexd has the following properties:
 #
